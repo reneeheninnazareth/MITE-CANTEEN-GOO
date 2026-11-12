@@ -1,0 +1,2893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<title>Canteen Queue</title>
+
+<style>
+:root{
+  --o:#f0644b;
+  --o2:#f7c948;
+  --teal:#1d8f86;
+  --bg:#fff8ec;
+  --ink:#2b2118;
+  --g:#2ea44f;
+  --r:#d9363e;
+  --mut:#7a6b5d
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  font-family:'Plus Jakarta Sans',system-ui,Arial,sans-serif
+}
+
+body{
+  background:var(--bg);
+  color:var(--ink)
+}
+
+h2,h3,.sec,header b,.stat{
+  font-family:'Outfit',sans-serif;
+  font-weight:700
+}
+
+button{
+  cursor:pointer;
+  border:0;
+  border-radius:10px;
+  padding:10px 16px;
+  background:var(--o);
+  color:#fff;
+  font-weight:600;
+  font-size:14px
+}
+
+button.ghost{
+  background:#fff;
+  color:var(--o);
+  border:2px solid var(--o)
+}
+
+button.sm{
+  padding:6px 12px;
+  font-size:13px
+}
+
+button.red{
+  background:var(--r)
+}
+
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  border:1.5px solid #e6d5c3;
+  border-radius:10px;
+  margin:6px 0;
+  font-size:15px;
+  background:#fff
+}
+
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:16px;
+  margin:12px 0;
+  box-shadow:0 2px 10px #0001
+}
+
+.hidden{
+  display:none!important
+}
+
+.auth{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  max-width:1000px;
+  margin:auto;
+  padding:clamp(0px,4vw,40px)
+}
+
+.auth-l{
+  background:var(--teal);
+  color:#fff;
+  padding:40px;
+  border-radius:28px 0 0 28px;
+  display:flex;
+  flex-direction:column;
+  gap:14px
+}
+
+.auth-l h1{
+  font-size:46px;
+  line-height:1.05;
+  font-family:'Outfit'
+}
+
+.auth-l em{
+  font-style:normal;
+  color:var(--o2)
+}
+
+.mascot{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:56px;
+  overflow:hidden
+}
+
+.mascot img{
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
+
+.auth-r{
+  background:#fff;
+  padding:40px;
+  border-radius:0 28px 28px 0
+}
+
+.auth-r h2{
+  font-size:34px;
+  margin:8px 0
+}
+
+.fl{
+  display:block;
+  font-weight:700;
+  font-size:14px;
+  margin:12px 0 2px
+}
+
+.role{
+  display:flex;
+  gap:8px;
+  margin:8px 0
+}
+
+.role label{
+  flex:1;
+  border:1.5px solid #ece3d6;
+  border-radius:12px;
+  padding:10px;
+  text-align:center;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600
+}
+
+.role label:has(input:checked){
+  border-color:var(--o);
+  background:#fff4f1
+}
+
+.role input{
+  display:none
+}
+
+.link{
+  background:none;
+  color:var(--o);
+  padding:6px 0;
+  text-decoration:underline
+}
+
+.err{
+  color:var(--r);
+  font-size:13px;
+  min-height:18px
+}
+
+@media(max-width:760px){
+  .auth{
+    grid-template-columns:1fr;
+    padding:0
+  }
+
+  .auth-l,.auth-r{
+    border-radius:0
+  }
+}
+
+header{
+  background:var(--teal);
+  color:#fff;
+  padding:12px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:5
+}
+
+nav{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  padding:10px 12px;
+  background:#fff
+}
+
+nav button{
+  background:#fff4f1;
+  color:var(--o);
+  white-space:nowrap
+}
+
+nav button.active{
+  background:var(--o);
+  color:#fff
+}
+
+main{
+  max-width:900px;
+  margin:auto;
+  padding:8px 14px 90px
+}
+
+.chips{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:4px 0
+}
+
+.chip{
+  white-space:nowrap;
+  background:#fff;
+  color:var(--o);
+  border:2px solid var(--o);
+  border-radius:20px;
+  padding:6px 14px
+}
+
+.chip.on{
+  background:var(--o);
+  color:#fff
+}
+
+.sec{
+  margin:18px 0 6px;
+  font-size:18px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:10px
+}
+
+.grid .card{
+  margin:0;
+  text-align:center
+}
+
+.grid select{
+  padding:6px
+}
+
+.pic{
+  width:100%;
+  height:110px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-bottom:6px;
+  display:block
+}
+
+.pic.ph{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:52px;
+  background:linear-gradient(135deg,#e6f4f1,#fde9a8)
+}
+
+.qty{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  align-items:center;
+  margin-top:6px
+}
+
+.qty button{
+  padding:4px 12px
+}
+
+.slot{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px;
+  border:2px solid #eee;
+  border-radius:10px;
+  margin:6px 0;
+  cursor:pointer
+}
+
+.slot.sel{
+  border-color:var(--o);
+  background:#fff4f1
+}
+
+.slot.full{
+  opacity:.55;
+  cursor:not-allowed
+}
+
+.bar{
+  flex:1;
+  height:8px;
+  background:#eee;
+  border-radius:6px;
+  overflow:hidden
+}
+
+.bar i{
+  display:block;
+  height:100%;
+  background:var(--g)
+}
+
+.bar i.mid{
+  background:var(--o2)
+}
+
+.bar i.full{
+  background:var(--r)
+}
+
+.tag{
+  padding:3px 10px;
+  border-radius:20px;
+  font-size:12px;
+  color:#fff;
+  background:#999
+}
+
+.Placed{
+  background:#888
+}
+
+.Preparing{
+  background:var(--o)
+}
+
+.Ready{
+  background:var(--g)
+}
+
+.Collected{
+  background:#444
+}
+
+.Cancelled{
+  background:#b9a99a
+}
+
+.row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-top:8px
+}
+
+.coupon{
+  border:2px dashed var(--o);
+  background:#fff4f1;
+  border-radius:14px;
+  padding:12px;
+  text-align:center;
+  margin:8px 0
+}
+
+.coupon b{
+  display:block;
+  font-family:'Outfit';
+  font-size:28px;
+  letter-spacing:.12em;
+  color:var(--o)
+}
+
+.coupon small{
+  color:var(--mut)
+}
+
+.cols{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px
+}
+
+.stat{
+  text-align:center;
+  font-size:26px;
+  color:var(--o)
+}
+
+.stat small{
+  display:block;
+  font-size:13px;
+  color:#777
+}
+
+#cartbar{
+  position:fixed;
+  left:12px;
+  right:12px;
+  bottom:12px;
+  z-index:8;
+  max-width:876px;
+  margin:auto;
+  background:var(--teal);
+  color:#fff;
+  border-radius:14px;
+  padding:12px 16px;
+  display:flex;
+  justify-content:space-between;
+  cursor:pointer
+}
+
+#toasts{
+  position:fixed;
+  top:64px;
+  right:12px;
+  z-index:20
+}
+
+.toast{
+  background:#2b2118;
+  color:#fff;
+  padding:12px 16px;
+  border-radius:12px;
+  margin-bottom:8px;
+  max-width:280px
+}
+
+#modal{
+  position:fixed;
+  inset:0;
+  background:#0007;
+  z-index:30;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px
+}
+
+#modal .card{
+  max-width:360px;
+  width:100%;
+  text-align:center
+}
+
+#bell{
+  position:relative;
+  background:transparent;
+  font-size:22px;
+  padding:0 8px
+}
+
+#bell b{
+  position:absolute;
+  top:-6px;
+  right:-2px;
+  background:var(--r);
+  border-radius:50%;
+  font-size:11px;
+  padding:1px 6px
+}
+
+#alarm{
+  background:var(--r);
+  color:#fff;
+  border-radius:14px;
+  padding:14px;
+  margin:12px 0;
+  animation:pl 1s infinite
+}
+
+@keyframes pl{
+  50%{opacity:.65}
+}
+
+.note{
+  padding:8px 0;
+  border-bottom:1px solid #eee;
+  text-align:left;
+  font-size:14px
+}
+
+.note.un{
+  font-weight:700
+}
+
+.inventory-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.inv-item{border:1px solid #eadfd4;border-radius:14px;padding:12px;background:#fff}
+.inv-item.low{border-color:#f0c35a;background:#fffaf0}
+.inv-item.out{border-color:#d9363e;background:#fff5f5}
+.stock-ok{color:var(--g);font-weight:700}.stock-low{color:#b77900;font-weight:700}.stock-out{color:var(--r);font-weight:700}
+.ing-check{border:1px solid #eee;border-radius:12px;padding:10px;margin-top:10px;background:#fffdf9}
+.ing-line{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed #eee;font-size:13px}
+.ing-line:last-child{border-bottom:0}
+.manager-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.manager-tabs button.active{background:var(--teal)}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="v-login">
+<div class="auth">
+
+<section class="auth-l">
+
+<div class="mascot">
+<img src="images/chicken-mascot.png"
+alt=""
+onerror="this.replaceWith(document.createTextNode('🐥'))">
+</div>
+
+<h1>
+Skip the line.<br>
+<em>Eat on time.</em>
+</h1>
+
+<p>
+Order your favourite canteen bites before the rush.
+</p>
+
+</section>
+
+<section class="auth-r">
+
+<h2 id="at">Welcome back</h2>
+
+<div id="nf" class="hidden">
+
+<label class="fl" for="name">
+Your name
+</label>
+
+<input id="name"
+placeholder="e.g. Alex Morgan">
+
+<div class="fl">
+I’m joining as a…
+</div>
+
+<div class="role">
+
+<label>
+<input type="radio" name="role" value="student" checked>
+🎒 Student
+</label>
+
+<label>
+<input type="radio" name="role" value="staff">
+🧑‍🍳 Staff
+</label>
+
+<label>
+<input type="radio" name="role" value="manager">
+📋 Manager
+</label>
+
+</div>
+
+</div>
+
+<label class="fl" for="email">
+Email
+</label>
+
+<input id="email"
+type="email"
+placeholder="you@school.com"
+autocomplete="username">
+
+<label class="fl" for="pw">
+Password
+</label>
+
+<input id="pw"
+type="password"
+placeholder="Your password"
+autocomplete="current-password">
+
+<div class="err" id="err"></div>
+
+<button style="width:100%" id="go" onclick="auth()">
+Log in
+</button>
+
+<button class="link" id="sw" onclick="mode()">
+New here? Create an account
+</button>
+
+</section>
+</div>
+</div>
+
+
+<!-- STUDENT -->
+<div id="v-student" class="hidden">
+
+<header>
+
+<b>🐔 Canteen Queue</b>
+
+<span id="who" style="font-size:13px"></span>
+
+<button id="bell"
+onclick="showNotes()"
+aria-label="Notifications">
+
+🔔
+<b id="cnt" class="hidden">0</b>
+
+</button>
+
+</header>
+
+<nav id="nav">
+
+<button data-t="order" class="active">
+🍽️ Order
+</button>
+
+<button data-t="orders">
+📦 My Orders
+</button>
+
+<button data-t="pay">
+🎟️ Payments
+</button>
+
+<button onclick="logout()">
+🚪 Logout
+</button>
+
+</nav>
+
+<main>
+
+<section id="order">
+
+<div class="card">
+
+<b>✨ Order in plain words</b>
+
+<textarea
+id="say"
+rows="2"
+placeholder="e.g. 2 burgers and a cold coffee at 12:30">
+</textarea>
+
+<button onclick="smart()">
+Understand my order
+</button>
+
+</div>
+
+<input
+id="search"
+placeholder="🔍 Search the menu"
+oninput="drawMenu()">
+
+<div class="chips" id="chips"></div>
+
+<div id="menu"></div>
+
+<div class="card" id="cartcard">
+
+<b>🧺 Your cart</b>
+
+<div id="cart">
+Nothing yet
+</div>
+
+</div>
+
+<div class="card">
+
+<b>⏰ Pick-up slot</b>
+
+<small>
+(green = quiet, red = busy)
+</small>
+
+<div id="slots"></div>
+
+</div>
+
+<div class="card">
+
+<label style="display:flex;gap:10px;align-items:center">
+
+<input
+type="checkbox"
+id="auto"
+style="width:auto;margin:0"
+onchange="setAuto(this.checked)">
+
+🔁 Auto-order: repeat my last order every day at the same slot
+
+</label>
+
+<small id="autoinfo" style="color:var(--mut)"></small>
+
+</div>
+
+<button style="width:100%" onclick="place()">
+Place Order
+</button>
+
+</section>
+
+<section id="orders" class="hidden"></section>
+
+<section id="pay" class="hidden"></section>
+
+</main>
+
+<div id="cartbar"
+class="hidden"
+onclick="$('cartcard').scrollIntoView({behavior:'smooth'})">
+
+<span id="cbn"></span>
+
+<b id="cbt"></b>
+
+</div>
+
+</div>
+
+
+<!-- STAFF / MANAGER -->
+<div id="v-kitchen" class="hidden">
+
+<header>
+
+<b id="kt">
+👨‍🍳 Live Kitchen
+</b>
+
+<button class="ghost" onclick="logout()">
+Logout
+</button>
+
+</header>
+
+<main>
+
+<div id="alarm" class="hidden">
+
+<b>🚨 ALARM</b>
+
+<div id="almsg"></div>
+
+<button
+class="sm"
+style="background:#fff;color:var(--r);margin-top:8px"
+onclick="stopAlarm()">
+
+Stop alarm
+
+</button>
+
+</div>
+
+
+<div class="card row">
+
+<label>
+
+<input
+type="checkbox"
+id="alon"
+checked
+style="width:auto;margin:0">
+
+🔔 Alarm sound for new &amp; due orders
+
+</label>
+
+<button class="sm ghost" onclick="beep()">
+Test sound
+</button>
+
+</div>
+
+
+<div class="cols" id="stats"></div>
+
+
+<div class="card">
+
+<b>🎟️ Verify coupon at counter</b>
+
+<div class="row">
+
+<input
+id="vc"
+placeholder="Enter coupon e.g. CQ-4821"
+style="flex:1;margin:0">
+
+<button onclick="verify()">
+Verify
+</button>
+
+</div>
+
+<div id="vr"></div>
+
+</div>
+
+
+<div id="managerTools" class="hidden">
+
+<div class="manager-tabs">
+<button class="sm active" id="mTabOrders" onclick="managerTab('orders')">📋 Orders</button>
+<button class="sm ghost" id="mTabInv" onclick="managerTab('inventory')">🥬 Ingredients</button>
+</div>
+
+<section id="managerInventory" class="hidden">
+<div class="card">
+<b>🥬 Ingredient Inventory</b>
+<p><small>Update stock here. Orders automatically check these quantities when placed.</small></p>
+<div class="row">
+<input id="newIngName" placeholder="Ingredient name" style="flex:2;margin:0">
+<input id="newIngQty" type="number" min="0" step="0.01" placeholder="Quantity" style="flex:1;margin:0">
+<input id="newIngUnit" placeholder="Unit (kg, g, L, ml, pcs)" style="flex:1;margin:0">
+<input id="newIngMin" type="number" min="0" step="0.01" placeholder="Min stock" style="flex:1;margin:0">
+<button class="sm" onclick="addIngredient()">Add</button>
+</div>
+</div>
+<div id="inventoryList"></div>
+</section>
+
+</div>
+
+<div id="managerOrders">
+
+<div class="card row">
+
+<button class="sm" onclick="setK(today())">
+Today
+</button>
+
+<label>
+
+Past orders:
+
+<input
+type="date"
+id="kd"
+onchange="setK(this.value)"
+style="width:auto;margin:0">
+
+</label>
+
+</div>
+
+<h3 id="lt">
+Orders
+</h3>
+
+<div id="list"></div>
+
+</div>
+
+</main>
+</div>
+
+
+<div id="toasts"></div>
+
+
+<script>
+
+const IMG_FOLDER='images/';
+
+const MENU=[
+
+{id:1,name:'Masala Dosa',img:'masala-dosa.jpeg',emoji:'🥞',price:50,cat:'Breakfast',kw:['dosa']},
+
+{id:2,name:'Idli Sambar',img:'idli.jpeg',emoji:'🍚',price:40,cat:'Breakfast',kw:['idli']},
+
+{id:3,name:'Poha',img:'poha.jpeg',emoji:'🥣',price:30,cat:'Breakfast',kw:['poha']},
+
+{id:4,name:'Bread Omelette',img:'bread-omlete.jpeg',emoji:'🍳',price:40,cat:'Breakfast',kw:['omelette','omelet']},
+
+{id:5,name:'Veg Thali',img:'thali.jpeg',emoji:'🍛',price:90,cat:'Meals',kw:['thali']},
+
+{id:6,name:'Fried Rice',img:'fried rice.jpeg',emoji:'🍚',price:70,cat:'Meals',kw:['fried rice','rice'],opts:[{n:'Veg',p:0},{n:'Egg',p:15},{n:'Chicken',p:30}]},
+
+{id:7,name:'Chicken Biryani',img:'biryani.jpg',emoji:'🍗',price:110,cat:'Meals',kw:['biryani']},
+
+{id:8,name:'Chicken Roll',img:'chicken-pan-rolls.webp',emoji:'🌯',price:70,cat:'Meals',kw:['roll']},
+
+{id:9,name:'Burger',img:'burger.jpeg',emoji:'🍔',price:60,cat:'Snacks',kw:['burger'],opts:[{n:'Regular',p:0},{n:'Cheese',p:15}]},
+
+{id:10,name:'Samosa',img:'samosa.jpeg',emoji:'🥟',price:15,cat:'Snacks',kw:['samosa']},
+
+{id:11,name:'Sandwich',img:'sandwich.jpg',emoji:'🥪',price:45,cat:'Snacks',kw:['sandwich']},
+
+{id:12,name:'French Fries',img:'french-fries.avif',emoji:'🍟',price:40,cat:'Snacks',kw:['fries'],opts:[{n:'Small',p:0},{n:'Large',p:20}]},
+
+{id:13,name:'Pizza Slice',img:'piza.avif',emoji:'🍕',price:50,cat:'Snacks',kw:['pizza']},
+
+{id:14,name:'Masala Tea',img:'tea.jpeg',emoji:'🍵',price:15,cat:'Hot Drinks',kw:['tea','chai']},
+
+{id:15,name:'Hot Coffee',img:'hotcoffee.jpeg',emoji:'☕',price:20,cat:'Hot Drinks',kw:['hot coffee']},
+
+{id:16,name:'Cold Coffee',img:'coffee.webp',emoji:'🧋',price:40,cat:'Cold Drinks',kw:['cold coffee','coffee']},
+
+{id:17,name:'Fresh Juice',img:'freshjuice.jpeg',emoji:'🧃',price:30,cat:'Cold Drinks',kw:['juice'],opts:[{n:'Orange',p:0},{n:'Mango',p:5},{n:'Watermelon',p:0}]},
+
+{id:18,name:'Lassi',img:'lassi.jpeg',emoji:'🥛',price:35,cat:'Cold Drinks',kw:['lassi'],opts:[{n:'Sweet',p:0},{n:'Salted',p:0}]},
+
+{id:19,name:'Soft Drink',img:'soft-drinks.jpeg',emoji:'🥤',price:25,cat:'Cold Drinks',kw:['soft drink','cola','coke','sprite','fanta'],opts:[{n:'Coca-Cola',p:0},{n:'Sprite',p:0},{n:'Fanta',p:0},{n:'Thums Up',p:0}]},
+
+{id:20,name:'Lime Soda',img:'lime-soda.jpeg',emoji:'🍋',price:30,cat:'Cold Drinks',kw:['lime soda','soda'],opts:[{n:'Sweet',p:0},{n:'Salted',p:0},{n:'Mixed',p:0}]},
+
+{id:21,name:'Iced Tea',img:'ice-tea.jpeg',emoji:'🧊',price:35,cat:'Cold Drinks',kw:['iced tea','ice tea']},
+
+{id:22,name:'Milkshake',img:'milkshake.jpeg',emoji:'🥤',price:60,cat:'Cold Drinks',kw:['milkshake','shake'],opts:[{n:'Chocolate',p:0},{n:'Vanilla',p:0},{n:'Strawberry',p:0},{n:'Mango',p:5}]},
+
+{id:23,name:'Water Bottle',img:'waterbottle.jpeg',emoji:'💧',price:20,cat:'Cold Drinks',kw:['water']},
+
+{id:30,name:'Vanilla',img:'vanilla-ice-cream.jpg',emoji:'🍨',price:25,cat:'Ice Cream',sub:'Scoops',kw:['vanilla']},
+
+{id:31,name:'Chocolate',img:'chocolate.jpeg',emoji:'🍫',price:30,cat:'Ice Cream',sub:'Scoops',kw:['chocolate']},
+
+{id:32,name:'Strawberry',img:'starwberry.jpg',emoji:'🍓',price:30,cat:'Ice Cream',sub:'Scoops',kw:['strawberry']},
+
+{id:33,name:'Butterscotch',img:'butterscotch.webp',emoji:'🍦',price:30,cat:'Ice Cream',sub:'Scoops',kw:['butterscotch']},
+
+{id:34,name:'Mango',img:'mango.jpeg',emoji:'🥭',price:30,cat:'Ice Cream',sub:'Scoops',kw:['mango scoop','mango ice']}
+
+].map(m=>m.cat==='Ice Cream'
+?{...m,opts:[{n:'1 Scoop',p:0},{n:'2 Scoops',p:20},{n:'3 Scoops',p:40}]}
+:m);
+
+const CATS=[
+'All',
+'Breakfast',
+'Meals',
+'Snacks',
+'Hot Drinks',
+'Cold Drinks',
+'Ice Cream'
+];
+
+const SLOTS=[];
+
+for(let m=690;m<=840;m+=15)
+SLOTS.push(
+String(m/60|0).padStart(2,'0')+
+':'+
+String(m%60).padStart(2,'0')
+);
+
+const CAP=6;
+
+$=id=>document.getElementById(id);
+
+const today=()=>new Date().toISOString().slice(0,10);
+
+const esc=s=>String(s).replace(
+/[&<>"']/g,
+c=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[c])
+);
+
+
+<!-- INGREDIENT INVENTORY -->
+
+const DEFAULT_INGREDIENTS=[
+{id:1,name:'Rice',qty:20,unit:'kg',min:5},
+{id:2,name:'Chicken',qty:5,unit:'kg',min:2},
+{id:3,name:'Potato',qty:5,unit:'kg',min:2},
+{id:4,name:'Onion',qty:4,unit:'kg',min:1},
+{id:5,name:'Tomato',qty:3,unit:'kg',min:1},
+{id:6,name:'Oil',qty:8,unit:'L',min:2},
+{id:7,name:'Wheat Flour',qty:8,unit:'kg',min:2},
+{id:8,name:'Maida',qty:5,unit:'kg',min:1},
+{id:9,name:'Egg',qty:30,unit:'pcs',min:10},
+{id:10,name:'Milk',qty:8,unit:'L',min:2},
+{id:11,name:'Coffee Powder',qty:2,unit:'kg',min:0.5},
+{id:12,name:'Tea Powder',qty:2,unit:'kg',min:0.5},
+{id:13,name:'Sugar',qty:5,unit:'kg',min:1},
+{id:14,name:'Bread',qty:40,unit:'pcs',min:10},
+{id:15,name:'Cheese',qty:2,unit:'kg',min:0.5},
+{id:16,name:'Batter',qty:8,unit:'kg',min:2},
+{id:17,name:'Sambar',qty:8,unit:'L',min:2},
+{id:18,name:'Poha',qty:4,unit:'kg',min:1},
+{id:19,name:'Juice Fruit',qty:8,unit:'kg',min:2},
+{id:20,name:'Ice Cream',qty:5,unit:'kg',min:1},
+{id:21,name:'Soft Drink',qty:40,unit:'pcs',min:10},
+{id:22,name:'Lime',qty:3,unit:'kg',min:1},
+{id:23,name:'Water',qty:100,unit:'pcs',min:20}
+];
+
+const RECIPE={
+1:[['Batter',0.2,'kg'],['Potato',0.08,'kg'],['Oil',0.015,'L']],
+2:[['Batter',0.18,'kg'],['Sambar',0.12,'L']],
+3:[['Poha',0.1,'kg'],['Onion',0.03,'kg'],['Oil',0.01,'L']],
+4:[['Bread',2,'pcs'],['Egg',2,'pcs'],['Onion',0.02,'kg'],['Oil',0.01,'L']],
+5:[['Rice',0.2,'kg'],['Dal',0.08,'kg'],['Vegetables',0.1,'kg'],['Oil',0.01,'L']],
+6:[['Rice',0.18,'kg'],['Onion',0.03,'kg'],['Oil',0.015,'L']],
+7:[['Rice',0.2,'kg'],['Chicken',0.15,'kg'],['Onion',0.04,'kg'],['Oil',0.02,'L']],
+8:[['Wheat Flour',0.08,'kg'],['Chicken',0.1,'kg'],['Onion',0.02,'kg'],['Oil',0.01,'L']],
+9:[['Wheat Flour',0.06,'kg'],['Onion',0.02,'kg'],['Oil',0.01,'L'],['Cheese',0.02,'kg']],
+10:[['Wheat Flour',0.04,'kg'],['Potato',0.03,'kg'],['Oil',0.02,'L']],
+11:[['Bread',2,'pcs'],['Onion',0.02,'kg'],['Tomato',0.02,'kg'],['Cheese',0.02,'kg']],
+12:[['Potato',0.15,'kg'],['Oil',0.04,'L']],
+13:[['Wheat Flour',0.08,'kg'],['Tomato',0.03,'kg'],['Cheese',0.03,'kg']],
+14:[['Tea Powder',0.01,'kg'],['Milk',0.12,'L'],['Sugar',0.015,'kg']],
+15:[['Coffee Powder',0.01,'kg'],['Milk',0.12,'L'],['Sugar',0.015,'kg']],
+16:[['Coffee Powder',0.01,'kg'],['Milk',0.2,'L'],['Sugar',0.02,'kg']],
+17:[['Juice Fruit',0.18,'kg'],['Sugar',0.015,'kg']],
+18:[['Milk',0.18,'L'],['Sugar',0.02,'kg']],
+19:[['Soft Drink',1,'pcs']],
+20:[['Lime',0.04,'kg'],['Sugar',0.015,'kg'],['Water',1,'pcs']],
+21:[['Tea Powder',0.01,'kg'],['Sugar',0.015,'kg']],
+22:[['Milk',0.25,'L'],['Sugar',0.025,'kg'],['Ice Cream',0.1,'kg']],
+23:[['Water',1,'pcs']],
+30:[['Ice Cream',0.1,'kg']],31:[['Ice Cream',0.1,'kg']],32:[['Ice Cream',0.1,'kg']],33:[['Ice Cream',0.1,'kg']],34:[['Ice Cream',0.1,'kg']]
+};
+
+function initInventory(){
+if(!DB.get('ingredients',null)) DB.set('ingredients',DEFAULT_INGREDIENTS);
+}
+
+function unitToBase(q,unit){
+const u=String(unit||'').toLowerCase();
+if(u==='g') return q/1000; if(u==='ml') return q/1000;
+return q;
+}
+
+function recipeForItem(item){
+let r=RECIPE[item.id]||[];
+return r.map(x=>({name:x[0],qty:x[1]*item.q,unit:x[2]}));
+}
+
+function checkOrderIngredients(order){
+const inv=DB.get('ingredients',DEFAULT_INGREDIENTS);
+const needed={};
+(order.items||[]).forEach(item=>recipeForItem(item).forEach(x=>{
+const k=x.name.toLowerCase();
+if(!needed[k]) needed[k]={name:x.name,qty:0,unit:x.unit};
+needed[k].qty+=x.qty;
+}));
+const details=Object.values(needed).map(x=>{
+const found=inv.find(i=>i.name.toLowerCase()===x.name.toLowerCase());
+const available=found?unitToBase(found.qty,found.unit):0;
+const required=unitToBase(x.qty,x.unit);
+return {name:x.name,required:x.qty,unit:x.unit,available,availableDisplay:found?found.qty:0,ok:!!found&&available+1e-9>=required};
+});
+return {ok:details.every(x=>x.ok),details};
+}
+
+function ingredientStatusForOrder(order){
+const r=checkOrderIngredients(order);
+return r.ok?'Available':'Insufficient';
+}
+
+function managerTab(tab){
+if(me?.role!=='manager') return;
+const inv=tab==='inventory';
+$('managerInventory').classList.toggle('hidden',!inv);
+$('managerOrders').classList.toggle('hidden',inv);
+$('mTabInv').classList.toggle('active',inv);
+$('mTabInv').classList.toggle('ghost',!inv);
+$('mTabOrders').classList.toggle('active',!inv);
+$('mTabOrders').classList.toggle('ghost',inv);
+if(inv) drawInventory(); else drawK();
+}
+
+function drawInventory(){
+if(me?.role!=='manager') return;
+const inv=DB.get('ingredients',DEFAULT_INGREDIENTS);
+$('inventoryList').innerHTML=`<div class="inventory-grid">${inv.map(i=>{
+const status=i.qty<=0?'Out of Stock':i.qty<=i.min?'Low Stock':'Available';
+const cls=status==='Out of Stock'?'out':status==='Low Stock'?'low':'';
+const st=status==='Out of Stock'?'stock-out':status==='Low Stock'?'stock-low':'stock-ok';
+return `<div class="inv-item ${cls}"><div class="row" style="justify-content:space-between"><b>${esc(i.name)}</b><span class="${st}">${status}</span></div><div class="row"><input type="number" min="0" step="0.01" value="${i.qty}" id="iq_${i.id}" style="margin:0;flex:1"><input value="${esc(i.unit)}" id="iu_${i.id}" style="margin:0;flex:1"><input type="number" min="0" step="0.01" value="${i.min}" id="im_${i.id}" style="margin:0;flex:1"></div><button class="sm" onclick="saveIngredient(${i.id})">Save</button> <button class="sm red" onclick="deleteIngredient(${i.id})">Delete</button></div>`;}).join('')}</div>`;
+}
+
+function saveIngredient(id){
+const a=DB.get('ingredients',DEFAULT_INGREDIENTS); const i=a.find(x=>x.id===id); if(!i)return;
+i.qty=Math.max(0,Number($('iq_'+id).value)||0); i.unit=$('iu_'+id).value.trim()||i.unit; i.min=Math.max(0,Number($('im_'+id).value)||0);
+DB.set('ingredients',a); drawInventory(); toast('Ingredient stock updated');
+}
+
+function addIngredient(){
+const name=$('newIngName').value.trim(); if(!name)return toast('Enter an ingredient name');
+const a=DB.get('ingredients',DEFAULT_INGREDIENTS); if(a.some(x=>x.name.toLowerCase()===name.toLowerCase())) return toast('Ingredient already exists');
+a.push({id:Date.now(),name,qty:Math.max(0,Number($('newIngQty').value)||0),unit:$('newIngUnit').value.trim()||'kg',min:Math.max(0,Number($('newIngMin').value)||0)}); DB.set('ingredients',a); ['newIngName','newIngQty','newIngUnit','newIngMin'].forEach(id=>$(id).value=''); drawInventory();
+}
+
+function deleteIngredient(id){
+if(!confirm('Delete this ingredient?'))return; DB.set('ingredients',DB.get('ingredients',DEFAULT_INGREDIENTS).filter(x=>x.id!==id)); drawInventory();
+}
+
+function deductIngredients(order){
+if(order.stockDeducted) return true;
+const check=checkOrderIngredients(order); if(!check.ok)return false;
+const a=DB.get('ingredients',DEFAULT_INGREDIENTS);
+check.details.forEach(d=>{const i=a.find(x=>x.name.toLowerCase()===d.name.toLowerCase()); if(i)i.qty=Math.max(0,i.qty-d.required*(String(i.unit).toLowerCase()==='g'?1000:String(i.unit).toLowerCase()==='ml'?1000:1));});
+DB.set('ingredients',a); order.stockDeducted=true; order.ingredientStatus='Consumed'; return true;
+}
+
+<!-- STORAGE -->
+
+const DB={
+get:(k,d)=>{
+try{
+return JSON.parse(localStorage.getItem('cq_'+k))??d
+}catch{
+return d
+}
+},
+
+set:(k,v)=>
+localStorage.setItem('cq_'+k,JSON.stringify(v))
+};
+
+initInventory();
+
+
+async function hash(s){
+
+const b=await crypto.subtle.digest(
+'SHA-256',
+new TextEncoder().encode('cq:'+s)
+);
+
+return[
+...new Uint8Array(b)
+].map(x=>x.toString(16).padStart(2,'0')).join('');
+
+}
+
+
+let me=null,
+signup=false,
+cart={},
+cat='All',
+slot=null,
+kdate=today();
+
+
+<!-- LOGIN -->
+
+function mode(){
+
+signup=!signup;
+
+$('nf').classList.toggle(
+'hidden',
+!signup
+);
+
+$('at').textContent=
+signup
+?'Let’s get you lunch-ready.'
+:'Welcome back';
+
+$('go').textContent=
+signup
+?'Create account'
+:'Log in';
+
+$('sw').textContent=
+signup
+?'Have an account? Log in'
+:'New here? Create an account';
+
+$('err').textContent='';
+
+}
+
+
+async function auth(){
+
+const email=$('email').value.trim().toLowerCase();
+
+const pw=$('pw').value;
+
+const users=DB.get('users',{});
+
+const err=m=>$('err').textContent=m;
+
+if(!/^\S+@\S+\.\S+$/.test(email))
+return err('Enter a valid email.');
+
+if(signup){
+
+const name=$('name').value.trim();
+
+if(!name)
+return err('Enter your name.');
+
+if(pw.length<6)
+return err('Password must be at least 6 characters.');
+
+if(users[email])
+return err('This email already has an account. Log in instead.');
+
+users[email]={
+name,
+email,
+role:document.querySelector('[name=role]:checked').value,
+pw:await hash(pw)
+};
+
+DB.set('users',users);
+
+}else{
+
+const u=users[email];
+
+if(!u||u.pw!==await hash(pw))
+return err('Wrong email or password.');
+
+}
+
+me=users[email];
+
+DB.set('session',email);
+
+enter();
+
+}
+
+
+function enter(){
+
+$('v-login').classList.add('hidden');
+
+$('pw').value='';
+
+if(me.role==='student'){
+
+$('v-student').classList.remove('hidden');
+
+$('who').textContent='Hi, '+me.name;
+
+drawChips();
+
+drawMenu();
+
+drawSlots();
+
+drawCart();
+
+}else{
+
+$('v-kitchen').classList.remove('hidden');
+
+$('kt').textContent=
+me.role==='manager'
+?'📋 Manager Desk'
+:'👨‍🍳 My Kitchen Queue';
+
+setK(today());
+
+clearInterval(window.tk);
+
+window.tk=setInterval(drawK,5000);
+
+checkAlarm();
+
+}
+
+runAuto();
+
+if(me.role==='student')
+initAuto();
+
+clearInterval(window.bg);
+
+window.bg=setInterval(()=>{
+
+runAuto();
+
+me.role==='student'
+?pollNotes()
+:checkAlarm();
+
+},4000);
+
+if(window.Notification&&Notification.permission==='default')
+Notification.requestPermission();
+
+}
+
+
+function logout(){
+
+DB.set('session',null);
+
+location.reload();
+
+}
+
+
+<!-- MENU -->
+
+const imgOf=m=>
+/^https?:/.test(m.img)
+?m.img
+:IMG_FOLDER+m.img;
+
+
+function drawChips(){
+
+$('chips').innerHTML=CATS.map(c=>
+
+`<button class="chip ${c===cat?'on':''}"
+onclick="cat='${c}';drawChips();drawMenu()">
+${c}
+</button>`
+
+).join('');
+
+}
+
+
+function drawMenu(){
+
+const q=$('search').value.toLowerCase();
+
+const list=MENU.filter(m=>
+(cat==='All'||m.cat===cat)&&
+(!q||(m.name+m.kw.join()).toLowerCase().includes(q))
+);
+
+let h='',
+last='';
+
+list.forEach(m=>{
+
+if(m.cat!==last){
+
+h+=(last?'</div>':'')+
+`<div class="sec">
+${m.cat}${m.sub?' · '+m.sub:''}
+</div>
+<div class="grid">`;
+
+last=m.cat;
+
+}
+
+h+=`
+
+<div class="card">
+
+<div class="pic ph" id="ph${m.id}">
+${m.emoji}
+</div>
+
+<img
+class="pic hidden"
+id="im${m.id}"
+src="${esc(imgOf(m))}"
+alt="${esc(m.name)}"
+onload="this.classList.remove('hidden');$('ph${m.id}').classList.add('hidden')">
+
+<b>${esc(m.name)}</b>
+
+<div>₹${m.price}</div>
+
+${m.opts?`
+
+<select id="o${m.id}">
+${m.opts.map((o,i)=>
+`<option value="${i}">
+${o.n}${o.p?' +₹'+o.p:''}
+</option>`
+).join('')}
+</select>
+
+`:''}
+
+<button
+class="sm"
+style="margin-top:6px"
+onclick="add(${m.id})">
+
+Add +
+
+</button>
+
+</div>`;
+
+});
+
+$('menu').innerHTML=
+h+(h?'</div>':'<p>No items found.</p>');
+
+}
+
+
+function add(id,n=1,oi){
+
+const m=MENU.find(x=>x.id===id);
+
+if(oi===undefined)
+oi=m.opts?+$('o'+id).value:0;
+
+const k=id+'_'+oi;
+
+cart[k]=(cart[k]||0)+n;
+
+drawCart();
+
+toast(m.name+' added');
+
+}
+
+
+function line(k){
+
+const[id,oi]=k.split('_').map(Number);
+
+const m=MENU.find(x=>x.id===id);
+
+const o=m.opts?.[oi];
+
+return{
+m,
+o,
+price:m.price+(o?o.p:0),
+name:m.name+(o?' ('+o.n+')':'')
+};
+
+}
+
+
+function chg(k,d){
+
+cart[k]+=d;
+
+if(cart[k]<=0)
+delete cart[k];
+
+drawCart();
+
+}
+
+
+const total=()=>
+Object.keys(cart).reduce(
+(s,k)=>s+line(k).price*cart[k],
+0
+);
+
+
+function drawCart(){
+
+const ks=Object.keys(cart);
+
+$('cart').innerHTML=ks.length
+
+?ks.map(k=>{
+
+const l=line(k);
+
+return`
+
+<div class="row"
+style="justify-content:space-between">
+
+<span>${esc(l.name)}</span>
+
+<span class="qty">
+
+<button class="sm"
+onclick="chg('${k}',-1)">
+−
+</button>
+
+${cart[k]}
+
+<button class="sm"
+onclick="chg('${k}',1)">
++
+</button>
+
+</span>
+
+<b>₹${l.price*cart[k]}</b>
+
+</div>`;
+
+}).join('')+
+
+`<hr>
+<b>Total ₹${total()}</b>`
+
+:'Nothing yet';
+
+const n=ks.reduce(
+(s,k)=>s+cart[k],
+0
+);
+
+$('cartbar').classList.toggle(
+'hidden',
+!n
+);
+
+$('cbn').textContent=
+n+' item(s)';
+
+$('cbt').textContent=
+'₹'+total();
+
+}
+
+
+function smart(){
+
+let t=$('say').value.toLowerCase();
+
+let hit=0;
+
+MENU.slice()
+.sort((a,b)=>
+Math.max(...b.kw.map(k=>k.length))-
+Math.max(...a.kw.map(k=>k.length))
+)
+.forEach(m=>{
+
+const k=m.kw.find(w=>t.includes(w));
+
+if(!k)return;
+
+const mt=t.match(
+new RegExp(
+'(\\d+)\\s*(?:x\\s*)?(?:scoops? of\\s*)?'+k
+)
+);
+
+add(
+m.id,
+mt?+mt[1]:1,
+0
+);
+
+hit++;
+
+t=t.replace(k,'');
+
+});
+
+const tm=t.match(/(\d{1,2}):(\d{2})/);
+
+if(tm){
+
+const s=
+tm[1].padStart(2,'0')+
+':'+
+tm[2];
+
+if(SLOTS.includes(s)){
+
+slot=s;
+
+drawSlots();
+
+}
+
+}
+
+toast(
+hit
+?'Added '+hit+' item type(s) to your cart'
+:'Could not understand — try item names'
+);
+
+}
+
+
+<!-- SLOTS -->
+
+const orders=()=>DB.get('orders',[]);
+
+
+function drawSlots(){
+
+const used={};
+
+orders()
+.filter(o=>
+o.date===today() &&
+o.status!=='Cancelled'
+)
+.forEach(o=>
+used[o.slot]=(used[o.slot]||0)+1
+);
+
+$('slots').innerHTML=SLOTS.map(s=>{
+
+const u=used[s]||0;
+
+const f=u>=CAP;
+
+const cl=
+f
+?'full'
+:u>=CAP/2
+?'mid'
+:'';
+
+return`
+
+<div class="slot
+${f?'full':''}
+${s===slot?'sel':''}"
+
+onclick="${
+f
+?''
+:`slot='${s}';drawSlots()`
+}">
+
+<b>${s}</b>
+
+<div class="bar">
+
+<i
+class="${cl}"
+style="width:${u/CAP*100}%">
+</i>
+
+</div>
+
+<small>
+${f?'Full':u+'/'+CAP}
+</small>
+
+</div>`;
+
+}).join('');
+
+}
+
+
+<!-- PLACE ORDER -->
+
+function newCoupon(){
+
+const used=new Set(
+orders().map(o=>o.coupon)
+);
+
+let c;
+
+do{
+
+c='CQ-'+
+(1000+Math.floor(Math.random()*9000));
+
+}while(used.has(c));
+
+return c;
+
+}
+
+
+function place(){
+
+if(!Object.keys(cart).length)
+return toast('Your cart is empty');
+
+if(!slot)
+return toast('Pick a pick-up slot');
+
+const o={
+
+id:Date.now(),
+
+coupon:newCoupon(),
+
+user:me.email,
+
+name:me.name,
+
+date:today(),
+
+slot,
+
+status:'Placed',
+
+staff:'',
+
+total:total(),
+
+items:Object.keys(cart).map(k=>({
+
+n:line(k).name,
+
+q:cart[k],
+
+p:line(k).price
+
+}))
+
+};
+
+o.ingredientStatus=ingredientStatusForOrder(o);
+
+const all=orders();
+
+all.push(o);
+
+DB.set('orders',all);
+
+saveAuto(o);
+
+cart={};
+
+slot=null;
+
+drawCart();
+
+drawSlots();
+
+const md=document.createElement('div');
+
+md.id='modal';
+
+md.innerHTML=`
+
+<div class="card">
+
+<h2>🎉 Order booked!</h2>
+
+<p>Your coupon number</p>
+
+<div class="coupon">
+
+<b>${o.coupon}</b>
+
+<small>
+Show this at the counter ·
+${o.slot} · ₹${o.total}
+</small>
+
+</div>
+
+<button
+onclick="this.closest('#modal').remove();tab('pay')">
+
+View my coupon
+
+</button>
+
+</div>`;
+
+document.body.appendChild(md);
+
+}
+
+
+<!-- STUDENT TABS -->
+
+$('nav').onclick=e=>{
+
+const t=e.target.dataset.t;
+
+if(t)
+tab(t);
+
+};
+
+
+function tab(t){
+
+['order','orders','pay'].forEach(x=>
+
+$(x).classList.toggle(
+'hidden',
+x!==t
+)
+
+);
+
+document
+.querySelectorAll('#nav button[data-t]')
+.forEach(b=>
+b.classList.toggle(
+'active',
+b.dataset.t===t
+)
+);
+
+if(t==='orders')
+drawOrders();
+
+if(t==='pay')
+drawPay();
+
+}
+
+
+const mine=()=>orders()
+.filter(o=>o.user===me.email)
+.reverse();
+
+
+function drawOrders(){
+
+$('orders').innerHTML=
+
+mine().map(o=>
+
+`<div class="card">
+
+<div class="row"
+style="justify-content:space-between">
+
+<b>${o.coupon}</b>
+
+<span class="tag ${o.status}">
+${o.status}
+</span>
+
+</div>
+
+<div>
+${o.items.map(i=>
+esc(i.n)+' ×'+i.q
+).join(', ')}
+</div>
+
+<small>
+${o.date} · pick-up ${o.slot} · ₹${o.total}
+</small>
+
+${o.status==='Placed'
+?`<div class="row">
+<button
+class="sm red"
+onclick="cancel(${o.id})">
+Cancel
+</button>
+</div>`
+:''}
+
+</div>`
+
+).join('')||'<p>No orders yet.</p>';
+
+}
+
+
+function cancel(id){
+
+const a=orders();
+
+a.find(o=>o.id===id).status='Cancelled';
+
+DB.set('orders',a);
+
+drawOrders();
+
+drawSlots();
+
+}
+
+
+function drawPay(){
+
+$('pay').innerHTML=
+
+'<div class="card">'+
+'<b>🎟️ Payments</b>'+
+'<p><small>'+
+'Pay at the counter. Show your coupon number to the canteen staff.'+
+'</small></p>'+
+'</div>'+
+
+(
+
+mine().map(o=>
+
+`<div class="card">
+
+<div class="coupon">
+
+<small>Coupon number</small>
+
+<b>${o.coupon}</b>
+
+<small>
+${o.date} · ${o.slot} · Amount ₹${o.total}
+</small>
+
+</div>
+
+<span class="tag ${o.status}">
+${o.status}
+</span>
+
+</div>`
+
+).join('')||
+
+'<p>Place an order to get your coupon number.</p>'
+
+);
+
+}
+
+
+<!-- KITCHEN / STAFF / MANAGER -->
+
+function setK(d){
+
+kdate=d||today();
+
+$('kd').value=kdate;
+
+drawK();
+
+}
+
+
+function drawK(){
+
+const users=
+Object.values(
+DB.get('users',{})
+);
+
+const staff=
+users.filter(
+u=>u.role==='staff'
+);
+
+const mgr=
+me.role==='manager';
+
+$('managerTools').classList.toggle('hidden',!mgr);
+if(!mgr){
+$('managerInventory').classList.add('hidden');
+$('managerOrders').classList.remove('hidden');
+}
+
+
+// ======================================================
+// FIXED STAFF ORDER FILTER
+// ======================================================
+
+// Manager:
+//   sees ALL orders.
+//
+// Staff:
+//   sees unassigned orders
+//   OR orders assigned to this staff member.
+//
+// This was the main reason staff was showing no orders.
+
+let l=orders()
+.filter(o=>o.date===kdate);
+
+if(!mgr){
+
+l=l.filter(o=>
+!o.staff ||
+o.staff===me.email
+);
+
+}
+
+l.sort(
+(a,b)=>a.slot.localeCompare(b.slot)
+);
+
+
+// ======================================================
+
+const c=s=>
+l.filter(o=>o.status===s).length;
+
+
+$('stats').innerHTML=[
+
+['Placed'],
+['Preparing'],
+['Ready'],
+['Collected']
+
+].map(([s])=>
+
+`<div class="card stat">
+${c(s)}
+<small>${s}</small>
+</div>`
+
+).join('');
+
+
+$('lt').textContent=
+(mgr
+?'All orders · '
+:'My Kitchen Queue · ')+
+kdate;
+
+
+$('list').innerHTML=
+
+l.map(o=>
+
+`<div class="card">
+
+<div class="row"
+style="justify-content:space-between">
+
+<b>
+${o.coupon} · ${esc(o.name)}
+</b>
+
+<span class="tag ${o.status}">
+${o.status}
+</span>
+
+</div>
+
+
+<div>
+${o.items.map(i=>
+esc(i.n)+' ×'+i.q
+).join(', ')}
+</div>
+
+
+<small>
+Pick-up slot
+<b>${o.slot}</b>
+· ₹${o.total}
+
+${o.staff
+?` · Staff: ${esc(
+users.find(u=>u.email===o.staff)?.name||o.staff
+)}`
+:''}
+
+</small>
+
+${mgr?`<div class="ing-check"><b>🥬 Ingredient check: ${o.ingredientStatus==='Available'?'🟢 Available':o.ingredientStatus==='Consumed'?'🟢 Stock consumed':'🔴 Insufficient'}</b><div>${checkOrderIngredients(o).details.map(d=>`<div class="ing-line"><span>${esc(d.name)}</span><span>${d.required} ${d.unit} needed · ${d.availableDisplay} available ${d.ok?'🟢':'🔴'}</span></div>`).join('')}</div></div>`:''}
+
+<div class="row">
+
+${
+mgr
+
+?`
+
+<select
+style="width:auto;margin:0"
+onchange="assign(${o.id},this.value)">
+
+<option value="">
+Assign staff…
+</option>
+
+${staff.map(s=>
+
+`<option
+value="${s.email}"
+${s.email===o.staff?'selected':''}>
+
+${esc(s.name)}
+
+</option>`
+
+).join('')}
+
+</select>
+
+`
+
+:''}
+
+
+${[
+'Preparing',
+'Ready',
+'Collected'
+].map(s=>
+
+`<button
+class="sm ${o.status===s?'':'ghost'}"
+onclick="setS(${o.id},'${s}')">
+
+${s}
+
+</button>`
+
+).join('')}
+
+</div>
+
+</div>`
+
+).join('')||'<p>No orders.</p>';
+
+}
+
+
+function upd(id,f){
+
+const a=orders();
+
+const o=a.find(o=>o.id===id);
+
+if(!o)
+return;
+
+f(o);
+
+DB.set('orders',a);
+
+drawK();
+
+}
+
+
+// ======================================================
+// FIXED STAFF ASSIGNMENT
+// ======================================================
+//
+// When staff clicks Preparing / Ready / Collected:
+//
+// If the order has no staff assigned yet,
+// automatically assign it to the logged-in staff.
+//
+// Manager-assigned orders keep their existing staff.
+//
+// ======================================================
+
+const setS=(id,s)=>{
+const current=orders().find(x=>x.id===id);
+if(!current)return;
+if(s==='Preparing'&&!current.stockDeducted){
+const chk=checkOrderIngredients(current);
+if(!chk.ok){toast('❌ Ingredients are insufficient for this order');return;}
+}
+upd(id,o=>{
+if(me.role==='staff'&&!o.staff){o.staff=me.email;}
+if(s==='Preparing'&&!o.stockDeducted) deductIngredients(o);
+o.status=s;
+o.ingredientStatus=o.stockDeducted?'Consumed':ingredientStatusForOrder(o);
+
+push(
+o.user,
+'Order '+
+o.coupon+
+' is '+
+s+
+(
+s==='Ready'
+?' — collect it at the counter!'
+:''
+)
+);
+
+});
+};
+
+
+const assign=(id,v)=>
+
+upd(id,o=>{
+
+o.staff=v;
+
+if(v)
+push(
+v,
+'New order '+
+o.coupon+
+' assigned · slot '+
+o.slot
+);
+
+});
+
+
+<!-- COUPON VERIFY -->
+
+function verify(){
+
+const c=$('vc')
+.value
+.trim()
+.toUpperCase();
+
+const o=orders()
+.find(x=>x.coupon===c);
+
+
+$('vr').innerHTML=
+
+o
+
+?`
+
+<div class="coupon">
+
+<b>${o.coupon}</b>
+
+${esc(o.name)}
+
+·
+
+${o.items.map(i=>
+esc(i.n)+' ×'+i.q
+).join(', ')}
+
+<br>
+
+<small>
+₹${o.total}
+·
+${o.slot}
+·
+${o.status}
+</small>
+
+<div class="row"
+style="justify-content:center">
+
+<button
+class="sm"
+onclick="setS(${o.id},'Collected');verify()">
+
+Mark collected
+
+</button>
+
+</div>
+
+</div>
+
+`
+
+:'<p class="err">Coupon not found.</p>';
+
+}
+
+
+<!-- NOTIFICATIONS -->
+
+const seen=new Set();
+
+
+function push(email,msg){
+
+const n=DB.get('notes',[]);
+
+n.push({
+
+id:Date.now()+Math.random(),
+
+email,
+
+msg,
+
+t:Date.now(),
+
+read:0
+
+});
+
+DB.set('notes',n);
+
+}
+
+
+function sys(m){
+
+if(
+window.Notification&&
+Notification.permission==='granted'
+)
+
+try{
+
+new Notification(
+'Canteen Queue',
+{
+body:m
+}
+);
+
+}catch{}
+
+}
+
+
+function pollNotes(){
+
+const n=DB.get('notes',[])
+.filter(x=>x.email===me.email);
+
+n.forEach(x=>{
+
+if(!x.read&&!seen.has(x.id)){
+
+seen.add(x.id);
+
+toast(
+'🔔 '+x.msg,
+6000
+);
+
+sys(x.msg);
+
+}
+
+});
+
+const u=
+n.filter(x=>!x.read).length;
+
+$('cnt').textContent=u;
+
+$('cnt').classList.toggle(
+'hidden',
+!u
+);
+
+}
+
+
+function showNotes(){
+
+const all=DB.get('notes',[]);
+
+const n=all
+.filter(x=>x.email===me.email)
+.reverse()
+.slice(0,15);
+
+const md=document.createElement('div');
+
+md.id='modal';
+
+md.innerHTML=
+
+'<div class="card">'+
+
+'<h3>🔔 Notifications</h3>'+
+
+(
+
+n.map(x=>
+
+`<div class="note ${x.read?'':'un'}">
+
+${esc(x.msg)}
+
+<br>
+
+<small>
+${new Date(x.t).toLocaleString()}
+</small>
+
+</div>`
+
+).join('')
+
+||
+
+'<p>Nothing yet.</p>'
+
+)+
+
+`<button
+style="margin-top:10px"
+onclick="this.closest('#modal').remove()">
+
+Close
+
+</button>
+
+</div>`;
+
+document.body.appendChild(md);
+
+all.forEach(x=>{
+
+if(x.email===me.email)
+x.read=1;
+
+});
+
+DB.set('notes',all);
+
+pollNotes();
+
+}
+
+
+<!-- AUTO ORDER -->
+
+function saveAuto(o){
+
+const a=DB.get('auto',{});
+
+const r=a[me.email];
+
+if(r&&r.on){
+
+a[me.email]={
+
+...r,
+
+items:o.items,
+
+slot:o.slot,
+
+total:o.total,
+
+last:today()
+
+};
+
+DB.set('auto',a);
+
+$('autoinfo').textContent=
+'Auto-order saved: tomorrow you get this order again at '+
+o.slot+'.';
+
+}
+
+}
+
+
+function setAuto(on){
+
+const a=DB.get('auto',{});
+
+const last=mine()[0];
+
+if(on&&!last){
+
+$('auto').checked=false;
+
+return toast(
+'Place one order first — it becomes your daily auto-order'
+);
+
+}
+
+a[me.email]={
+
+on,
+
+items:last?last.items:[],
+
+slot:last?last.slot:'',
+
+total:last?last.total:0,
+
+last:
+(last&&last.date===today())
+?today()
+:''
+
+};
+
+DB.set('auto',a);
+
+initAuto();
+
+toast(
+on
+?'Auto-order ON: same order every day'
+:'Auto-order OFF'
+);
+
+}
+
+
+function initAuto(){
+
+const r=
+DB.get('auto',{})[me.email];
+
+$('auto').checked=
+!!(r&&r.on);
+
+$('autoinfo').textContent=
+r&&r.on
+?'Repeats: '+r.items.map(
+i=>i.n+' ×'+i.q
+).join(', ')+' at '+r.slot
+:'';
+
+}
+
+
+function runAuto(){
+
+const a=DB.get('auto',{});
+
+const users=DB.get('users',{});
+
+const now=new Date();
+
+if(now.getHours()>=14)
+return;
+
+let ch=0;
+
+Object.keys(a).forEach(e=>{
+
+const r=a[e];
+
+if(
+!r.on||
+r.last===today()||
+!users[e]||
+!r.items.length
+)
+return;
+
+r.last=today();
+
+ch=1;
+
+const all=orders();
+
+if(
+all.some(
+o=>
+o.user===e&&
+o.date===today()&&
+o.status!=='Cancelled'
+)
+)
+
+return DB.set('auto',a);
+
+
+const cnt=s=>
+all.filter(
+o=>
+o.date===today()&&
+o.slot===s&&
+o.status!=='Cancelled'
+).length;
+
+
+const free=[
+r.slot,
+...SLOTS
+].find(
+s=>
+s&&
+SLOTS.includes(s)&&
+cnt(s)<CAP
+);
+
+if(!free)
+
+return push(
+e,
+'Auto-order skipped today: all slots are full.'
+);
+
+
+const o={
+
+id:
+Date.now()+
+Math.floor(Math.random()*1000),
+
+coupon:newCoupon(),
+
+user:e,
+
+name:users[e].name,
+
+date:today(),
+
+slot:free,
+
+status:'Placed',
+
+staff:'',
+
+total:r.total,
+
+items:r.items
+
+};
+
+all.push(o);
+
+DB.set('orders',all);
+
+push(
+e,
+'🔁 Auto-order placed for today. Coupon '+
+o.coupon+
+' · pick-up '+
+free
+);
+
+});
+
+if(ch)
+DB.set('auto',a);
+
+}
+
+
+<!-- STAFF ALARM -->
+
+let actx,
+alt=null,
+pend=[];
+
+
+function beep(){
+
+try{
+
+actx=
+actx||
+new(window.AudioContext||
+window.webkitAudioContext)();
+
+[0,.3].forEach(d=>{
+
+const o=actx.createOscillator();
+
+const g=actx.createGain();
+
+const t=
+actx.currentTime+d;
+
+o.type='square';
+
+o.frequency.value=900;
+
+g.gain.value=.25;
+
+o.connect(g);
+
+g.connect(actx.destination);
+
+o.start(t);
+
+o.stop(t+.2);
+
+});
+
+}catch{}
+
+}
+
+
+function checkAlarm(){
+
+const ack=
+DB.get(
+'ack_'+me.email,
+[]
+);
+
+const mins=
+new Date().getHours()*60+
+new Date().getMinutes();
+
+const msgs=[];
+
+pend=[];
+
+orders()
+.filter(o=>
+
+o.date===today()&&
+(
+me.role==='manager'||
+!o.staff||
+o.staff===me.email
+)&&
+![
+'Ready',
+'Collected',
+'Cancelled'
+].includes(o.status)
+
+)
+.forEach(o=>{
+
+if(!ack.includes('n'+o.id)){
+
+pend.push('n'+o.id);
+
+msgs.push(
+'🆕 New order '+
+o.coupon+
+' · pick-up '+
+o.slot
+);
+
+}
+
+const[h,m]=o.slot.split(':');
+
+if(
++h*60+
++m-
+mins<=10&&
+!ack.includes('d'+o.id)
+){
+
+pend.push('d'+o.id);
+
+msgs.push(
+'⏰ Due within 10 min: '+
+o.coupon+
+' at '+
+o.slot
+);
+
+}
+
+});
+
+
+$('alarm').classList.toggle(
+'hidden',
+!msgs.length
+);
+
+$('almsg').innerHTML=
+msgs.map(esc).join('<br>');
+
+
+if(msgs.length){
+
+if(!alt&&$('alon').checked){
+
+beep();
+
+alt=setInterval(
+beep,
+1500
+);
+
+sys(msgs[0]);
+
+}
+
+}else{
+
+stopRing();
+
+}
+
+}
+
+
+function stopRing(){
+
+clearInterval(alt);
+
+alt=null;
+
+}
+
+
+function stopAlarm(){
+
+stopRing();
+
+const a=
+DB.get(
+'ack_'+me.email,
+[]
+);
+
+DB.set(
+'ack_'+me.email,
+a.concat(pend)
+);
+
+pend=[];
+
+$('alarm').classList.add(
+'hidden'
+);
+
+}
+
+
+function toast(m,ms=2500){
+
+const t=document.createElement('div');
+
+t.className='toast';
+
+t.textContent=m;
+
+$('toasts').appendChild(t);
+
+setTimeout(
+()=>t.remove(),
+ms
+);
+
+}
+
+
+document.addEventListener(
+'keydown',
+e=>{
+
+if(
+e.key==='Enter'&&
+!$('v-login')
+.classList.contains('hidden')
+)
+
+auth();
+
+});
+
+
+(function(){
+
+const e=DB.get('session');
+
+const u=
+e&&DB.get('users',{})[e];
+
+if(u){
+
+me=u;
+
+enter();
+
+}
+
+})();
+
+</script>
+
+</body>
+</html>
